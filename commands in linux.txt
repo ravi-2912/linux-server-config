@@ -1,0 +1,159 @@
+:: disto upgrade and restart
+sudo-apt-get update
+sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
+sudo shutdown -r now
+
+:: configure local timezone to UTC
+sudo dpkg-reconfigure tzdata
+::Install ntp daemon ntpd for a better synchronization of the server's time over the network connection
+sudo apt-get install ntp -y
+
+
+:: automatic updates
+https://libre-software.net/ubuntu-automatic-updates/
+:: install package
+sudo apt install unattended-upgrades -y
+:: edit configuration file and enable updates by removing //
+sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+:: enable automatic updates by editing the file and inlude the two lines below
+-> APT::Periodic::Download-Upgradeable-Packages "1";
+-> APT::Periodic::AutocleanInterval "7";
+sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+:: command line version but above offer more control
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+::check if it works
+sudo unattended-upgrades --dry-run --debug
+sudo shutdown -r now
+
+sudo ufw status
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 2200/tcp
+sudo ufw allow 123/udp
+sudo ufw allow http
+sudo ufw allow www
+sudo ufw allow ntp
+sudo ufw allow ssh
+sudo ufw deny ssh
+sudo ufw show added
+
+:: enable Port 2200 in ssh/sshd_config file
+sudo nano /etc/ssh/sshd_config
+
+:: enable ufw and restart ssh
+sudo ufw enable
+sudo service ssh restart
+sudo ufw status
+
+::logout and login using 2200 port
+
+::fail2ban
+sudo apt-get install fail2ban sendmail iptables-persistent -y
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo nano /etc/fail2ban/jail.local
+::destemail = ravi_29_12@hotmail.com
+::action = %(action_mwl)s
+:: under [sshd] 
+:: port = 2200
+sudo service fail2ban restart
+https://www.digitalocean.com/community/tutorials/how-fail2ban-works-to-protect-services-on-a-linux-server
+
+:: check if mail is working form ubuntu
+sudo apt install mailutils -y
+echo "test message" | mailx -s 'test subject' ravi_29_12@hotmail.com
+
+:: add grader user
+sudo adduser grader
+:: login grader password grader name Udacity Grader
+
+:: get user list
+less /etc/passwd
+:: or
+getent
+:: or 
+getent passwd
+
+:: add grader to sudoers list
+sudo nano /etc/sudoers.d/grader
+:: preferable command
+sudo visudo
+:: add the line -> grader ALL=(ALL:ALL) ALL
+
+su - grader
+:: check for sudo permissions
+sudo -l
+mkdir .ssh
+cd .ssh
+:: create key "authorized_keys"
+ssh-keygen
+mv authorized_keys authorized_keys.rsa
+mv authorized_keys.pub authorized_keys
+sudo chmod 700 /home/grader/.ssh
+sudo chmod 644 /home/grader/.ssh/authorized_keys
+:: type exit to go back to ubuntu
+exit
+sudo chown -R grader:grader /home/grader/.ssh
+
+:: send rsa key via email
+su - grader
+ echo "Subject: Udacity Grader Key" | cat authorized_keys.rsa | /usr/sbin/sendmail -m "RSA  key for grader" -a authorized_keys.rsa -t ravi_29_12@hotmail.com
+
+
+:: for additonal packages install
+sudo apt-get install finger git python3-pip -y
+
+:: git vonfig
+git config --global user.name "ravi_29_12"
+git config --global user.email "ravi_29_12@hotmail.com"
+
+
+:: apache2, postgres, python for apache2
+sudo apt-get install apache2 libapache2-mod-wsgi-py3 postgresql postgresql-contrib -y
+sudo service apache2 start
+::Enable mod_wsgi using
+sudo a2enmod wsgi
+
+:: additional postgresql dependencies (not required)
+sudo apt-get install -y postgresql-client postgresql-client-common
+
+sudo su - postgres
+psql
+CREATE ROLE sportsitems WITH LOGIN PASSWORD 'sportsitems';
+ALTER ROLE sportsitems CREATEDB;
+\du
+\q
+exit
+sudo adduser sportsitems
+sudo visudo
+-> sportsitems ALL=(ALL:ALL) ALL
+
+:: log in as sportsitems
+su - sportsitems
+sudo -l
+createdb sportsitems
+psql
+\l
+:: verify if sportsitems db exists
+\q
+exit
+
+:: log in as ubuntu user
+sudo mkdir /var/www/sportsitems
+cd /var/www/sportsitems
+sudo apt-get install git-sh
+sudo git clone https://github.com/ravi-2912/flask-items-catalog.git
+
+::To make .git directory is not publicly accessible via a browser, create a .htaccess file in the .git folder and put the following in this file: RedirectMatch 404 /\.git
+
+:: change ownership of sportsitems folder to grader
+sudo chown -R grader:grader sportsitems/
+
+:: now log in as grader
+sudo su - grader
+sudo pip3 install virtualenv
+sudo virtualenv venv
+
+
+
+

@@ -1,0 +1,21 @@
+:: check who are owners
+cmd /c icacls ravi.pem
+
+:: remove inheritance
+cmd /c icacls ravi.pem /c /t /inheritance:d
+
+:: remove the Users, keep logged in user, system and admin
+
+:: or remove all except the owner i.e. logged in user
+cmd /c icacls ravi.pem  /c /t /remove Administrator BUILTIN\Administrators BUILTIN Everyone System Users
+
+:: verify
+cmd /c icacls ravi.pem
+
+
+:: log in to lightsail
+ssh -i ravi.pem -p 22 ubuntu@35.177.147.191
+ssh -i ravi.pem -p 2200 ubuntu@35.177.147.191
+
+:: check ravi_29_12 email and save the key as grader.rsa
+ssh -i grader.rsa -p 2200 ubuntu@18.130.99.98
