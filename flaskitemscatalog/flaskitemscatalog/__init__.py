@@ -38,7 +38,7 @@ crud = CRUD()
 
 # read client secret
 CLIENT_ID = json.loads(
-    open('/var/www/flaskitemscatalog/flasitemscatalog/client_secret.json', 'r').read())['web']['client_id']
+    open('/var/www/flaskitemscatalog/flaskitemscatalog/client_secret.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "SportsItems"
 
 # home page route
