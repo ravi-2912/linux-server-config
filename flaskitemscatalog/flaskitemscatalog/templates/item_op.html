@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+
+{% block page_content %}
+<section class="col">
+    <div class="container">
+        <h2 class="d-inline">
+            {% if op == "new" %}
+                New
+            {% elif op == "edit" %}
+                Edit
+            {% else %}
+                Delete
+            {% endif %}
+            Item
+            {% if op != "new" %}
+            <em> - {{item.name}}</em>
+            {% endif %}
+        </h2>
+        <form class="container" method="POST">
+            {% if op == "delete" %}
+                <p class="lead">Are you sure you want to delete item?</p>
+                <button type="submit" class="btn btn-danger" name="action" value="DELETE">Delete</button>
+            {% else %}
+                <div class="form-group">
+                    <label for="item-name">{% if op == "edit" %} New {% endif %} Name</label>
+                    <input type="text" class="form-control" id="item-name" aria-describedby="item-name-help" placeholder="Enter name" name="name" value="{% if op == 'edit' %}{{item.name}}{% endif %}">
+                    <small id="item-name-help" class="form-text text-muted">Whats is the <em>{% if op == 'edit' %}new{% endif %} name</em> of the item?</small>
+                </div>
+                <div class="form-group">
+                    <label for="item-description">{% if op == "edit" %} New {% endif %} Description</label>
+                    <textarea rows="3" class="form-control" id="item-desc" aria-describedby="item-desc-help"
+                    placeholder="Enter description" name="description">{% if op == 'edit' %}{{item.description}}{% endif %}</textarea>
+                    <small id="item-description-help" class="form-text text-muted">Whats is the <em>{% if op == 'edit' %}new{% endif %} description</em> of the item?</small>
+                </div>
+                <div class="form-group">
+                    <label for="select-category">{% if op == "edit" %} New {% endif %} Category</label>
+                    <select class="form-control" id="select-category" name="category">
+                        {% for cat in categories %}
+                            {% if op != "new" %}
+                            {% if cat.id == item.category_id %}
+                                <option id="{{cat.id}}" value="{{cat.id}}" selected>{{cat.name}}</option>
+                            {% else %}
+                                <option id="{{cat.id}}" value="{{cat.id}}">{{cat.name}}</option>
+                            {% endif %}
+                            {% else %}
+                            <option id="{{cat.id}}" value="{{cat.id}}">{{cat.name}}</option>
+                            {%endif%}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="item-quantity">{% if op == "edit" %} New {% endif %} Quantity</label>
+                    <input type="text" class="form-control" id="item-quantity" aria-describedby="item-quantity-help" placeholder="Enter quantity" name="quantity" value="{% if op == 'edit' %}{{item.quantity}}{% endif %}">
+                    <small id="item-quantity-help" class="form-text text-muted">Whats is the <em>{% if op == 'edit' %}new{% endif %} quantity</em> of the item?</small>
+                </div>
+                {% if op == "new" %}
+                    <button type="submit" class="btn btn-primary" name="action" value="CREATE">Submit</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary" name="action" value="UPDATE">Update</button>
+                {% endif %}
+            {% endif %}
+            <button type="submit" class="btn btn-secondary" name="action" value="CANCEL">Cancel</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

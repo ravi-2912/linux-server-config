@@ -1,0 +1,91 @@
+{% extends "index.html" %}
+
+{% block preloads %}
+<!--
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://apis.google.com/js/platform.js?onload=start"></script>
+-->
+{% endblock %}
+
+{% block nav_form %}
+{% endblock %}
+
+{% block page_title %}
+<div class="col-md-12 col-lg-12">
+    <h1 class="display-4">
+        Login
+    </h1>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<section class="col-md-9 pl-0">
+    <form class="container" method="POST">
+        <div class="form-group">
+            <label for="item-name">Username</label>
+            <input type="text" class="form-control" id="loginid" aria-describedby="loginid-help" placeholder="Username-12345"
+                name="loginid">
+            <small id="loginid-help" class="form-text text-muted">Enter registered username for login</small>
+        </div>
+        <div class="form-group">
+            <label for="item-price">Password</label>
+            <input type="password" class="form-control" id="password" aria-describedby="password-help" placeholder="Password-12345"
+                name="password">
+            <small id="password-help" class="form-text text-muted">Enter your password</small>
+        </div>
+        <button type="submit" class="btn btn-primary" name="action" value="LOGIN">Submit</button>
+        <button type="submit" class="btn btn-secondary" name="action" value="CANCEL">Cancel</button>
+        <!--
+        <p class="mt-4 lead">Or sign-in using Google</p>
+
+        <div id="signinButton">
+            <span class="g-signin" data-scope="openid email" data-clientid="753101444729-vm88vejm4rotmj604q3ut9914ievddcb.apps.googleusercontent.com"
+                data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin"
+                data-callback="signInCallback" data-approvalprompt="force" data-height="200">
+            </span>
+        </div>
+    -->
+    </form>
+    <!--
+    <div class="container">
+        <div id="result"></div>
+    </div>
+-->
+</section>
+{% endblock %}
+
+{% block additional_script %}
+<!--
+<script type="text/javascript">
+    function signInCallback(authResult) {
+        if (authResult["code"]) {
+            // Hide the sign-in button now that the user is authorized
+            $("#signinButton").attr("style", "display: none");
+            // Send the one-time-use code to the server, if the server responds, write a "login successful" message to the web page and then redirect back to the main restaurants page
+            fetch("/gconnect?state={{STATE}}", {
+                method: "POST",
+                body: authResult["code"],
+                headers: {
+                    "Content-Type": "application/json"
+                    // "Content-Type": "application/x-www-form-urlencoded",
+                }
+            }).then(response => response.json()).then(result => {
+                // Handle or verify the server response if necessary.
+                if (result) {
+                    console.log(result)
+                    $("#result").html("Login Successful!</br>" + result.output.body + "</br>Redirecting...")
+                    setTimeout(function () {
+                        window.location.href = "/home";
+                    }, 5000);
+                } else if (authResult["error"]) {
+                    $("#result").html("There was an error: " + authResult["error"]);
+                } else {
+                    $("#result").html(
+                        "Failed to make a server-side call. Check your configuration and console.");
+                }
+            })
+        }
+    }
+</script>
+-->
+{% endblock %}

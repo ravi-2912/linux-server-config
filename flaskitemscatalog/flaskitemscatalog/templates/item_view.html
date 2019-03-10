@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block page_content %}
+<section class="col-md-6 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{item.name}}</h2>
+                <h4 class="card-subtitle mb-2 text-muted">{{categories[item.category_id-1].name}}</h4>
+                <h5 class="card-subtitle mb-2 text-muted">Quantity: {{item.quantity}}</h5>
+                <p class="card-text">{{item.description}}</p>
+                <a href="#" onclick="window.history.back();" class="card-link ">Back</a>
+                <a href="{{url_for('editItem',id=item.id)}}" class="card-link ">Edit</a>
+                <a href="{{url_for('deleteItem',id=item.id)}}" class="card-link">Delete</a>
+            </div>
+        </div>
+</section>
+{% endblock %}

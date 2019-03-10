@@ -142,7 +142,7 @@ exit
 sudo mkdir /var/www/sportsitems
 cd /var/www/sportsitems
 sudo apt-get install git-sh
-sudo git clone https://github.com/ravi-2912/flask-items-catalog.git
+sudo git clone -b apache2  https://github.com/ravi-2912/flask-items-catalog.git
 
 ::To make .git directory is not publicly accessible via a browser, create a .htaccess file in the .git folder and put the following in this file: RedirectMatch 404 /\.git
 
@@ -154,6 +154,29 @@ sudo su - grader
 sudo pip3 install virtualenv
 sudo virtualenv venv
 
+sudo virtualenv -p python3 venv3
+sudo chown -R grader:grader venv3/
+. venv3/bin/activate
+pip install httplib2 requests sqlalchemy flask bleach
+sudo apt-get install libpq-dev
+pip install psycopg2 psycopg2-binary
+pip install --upgrade oauth2client
+
+::test
+cd /var/www/sportsitems/sportsitems
+python3 run.py
+deactivate
 
 
+sudo nano /etc/apache2/mods-enabled/wsgi.conf
+:: #WSGIPythonPath directory|directory-1:directory-2:... Add line as below
+-> WSGIPythonPath /var/www/catalog/catalog/venv3/lib/python3.5/site-packages
 
+::create file /etc/apache2/sites-available/catalog.conf
+::fill the entry
+
+
+sudo systemctl reload apache2
+
+sudo a2ensite flaskitemscatalog
+sudo a2dissite 000-default.conf # disable default site

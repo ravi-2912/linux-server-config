@@ -1,0 +1,64 @@
+.btn-add {
+    font-size: 1.5rem;
+    color: hsla(134, 61%, 41%, 0.5) ;
+}
+
+.btn-add:hover {
+    font-size: 1.5rem;
+    color: hsl(134, 61%, 41%) ;
+}
+
+.btn-edit {
+    color: hsla(45, 100%, 51%, 0.4);
+}
+
+.btn-edit:hover {
+    color: hsl(45, 100%, 51%);
+}
+
+.btn-delete {
+    color: hsla(0, 67%, 54%, 0.3);
+}
+
+.btn-delete:hover {
+    color: hsl(354, 70%, 54%);
+}
+
+.cat-edit {
+    position: relative;
+    top: 13px;
+    right: 0;
+    z-index: 10000;
+}
+
+.flash-message {
+    position: fixed;
+    top: 55px;
+    color:black;
+}
+
+/*
+$blue:    #007bff !default; // primary
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default; // danger
+$orange:  #fd7e14 !default;
+$yellow:  #ffc107 !default; // warning
+$green:   #28a745 !default; // success
+$teal:    #20c997 !default;
+$cyan:    #17a2b8 !default; // info
+
+// Grays
+$white:    #fff !default;
+$gray-100: #f8f9fa !default; // light
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #868e96 !default; // secondary
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default; // dark
+$gray-900: #212529 !default;
+$black:    #000 !default;
+*/

@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+{% block page_content %}
+<aside class="col-md-3 pl-0">
+    <div class="container">
+        <h2 class="d-inline">Categories</h2>
+        <a role="button" href="{{url_for('newCategory')}}" class="p-2 btn-add"><i class="fas fa-plus-square"></i></a>
+        <div class="list-group border-right" id="list-tab" role="tablist">
+        {% for category in categoryList %}
+            <div>
+                {% if "username" in login_session and login_session["user_id"] == category.user_id %}
+                <span class="ml-4 float-right cat-edit">
+                    <a role="button" href="{{url_for('editCategory',id=category.id)}}" class="btn-edit p-2"><i class="fas fa-pencil-alt"></i></a>
+                    <a role="button" href="{{url_for('deleteCategory',id=category.id)}}" class="btn-delete p-2"><i class="far fa-trash-alt"></i></a>
+                </span>
+                {% endif %}
+                <a class="pl-2 list-group-item list-group-item-action border-0 {% if category_id == category.id %} active {% endif %}"
+                    id="cat-{{category.id}}"
+                    href="{{url_for('categoryItems', id=category.id)}}">
+                    {{category.name}}
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</aside>
+
+<section class="col">
+    <div class="container">
+        <h2 class="d-inline">Latest Items</h2>
+        <a role="button" href="{{url_for('newItem')}}" class="p-2 btn-add"><i class="fas fa-plus-square"></i></a>
+        <ul class="list-group list-group-flush">
+        {% for item in itemList %}
+            <li class="border-0 list-group-item d-flex justify-content-start align-items-center pl-0">
+                <a class="font-weight-bold" href="{{url_for('viewItem', id=item.id)}}">{{item.name}}</a>
+                <small class="font-italic font-weight-light ml-2 mb-0 text-black-50">
+                    {% for category in categoryList %}
+                        {% if category.id == item.category_id %}
+                            ({{category.name}})
+                        {% endif %}
+                    {% endfor %}
+                </small>
+                <span class="badge badge-primary badge-pill ml-2">{{item.quantity}}</span>
+                {% if "username" in login_session and login_session["user_id"] == item.user_id %}
+                <span class="ml-4">
+                    <a role="button" href="{{url_for('editItem',id=item.id)}}" class="btn-edit p-2"><i class="fas fa-pencil-alt"></i></a>
+                    <a role="button" href="{{url_for('deleteItem',id=item.id)}}" class="btn-delete p-2"><i class="far fa-trash-alt"></i></a>
+                </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}

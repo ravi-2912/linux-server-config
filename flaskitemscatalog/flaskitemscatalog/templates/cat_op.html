@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block page_content %}
+<section class="col">
+    <div class="container">
+        <h2 class="d-inline">
+            {% if op == "new" %}
+                New
+            {% elif op == "edit" %}
+                Edit
+            {% else %}
+                Delete
+            {% endif %}
+            Category
+            {% if op != "new" %}
+            <em> - {{cat_name}}</em>
+            {% endif %}
+        </h2>
+        <form class="container" method="POST">
+            {% if op == "delete" %}
+                <p class="lead">Are you sure you want to delete category?</p>
+                <button type="submit" class="btn btn-danger" name="action" value="DELETE">Delete</button>
+            {% else %}
+                <div class="form-group">
+                    <label for="cat-name">{% if op == "edit" %} New {% endif %} Name</label>
+                    <input type="text" class="form-control" id="cat-name" aria-describedby="cat-name-help" placeholder="Enter name" name="name" value="{% if op == 'edit' %}{{cat_name}}{% endif %}">
+                    <small id="cat-name-help" class="form-text text-muted">Whats is the <em>{% if op == 'edit' %}new{% endif %} name</em> of the category?</small>
+                </div>
+                {% if op == "new" %}
+                    <button type="submit" class="btn btn-primary" name="action" value="CREATE">Submit</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary" name="action" value="UPDATE">Update</button>
+                {% endif %}
+            {% endif %}
+            <button type="submit" class="btn btn-secondary" name="action" value="CANCEL">Cancel</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

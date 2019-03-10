@@ -18,4 +18,4 @@ ssh -i ravi.pem -p 22 ubuntu@35.177.147.191
 ssh -i ravi.pem -p 2200 ubuntu@35.177.147.191
 
 :: check ravi_29_12 email and save the key as grader.rsa
-ssh -i grader.rsa -p 2200 ubuntu@18.130.99.98
+ssh -i grader.rsa -p 2200 grader@35.177.147.191
