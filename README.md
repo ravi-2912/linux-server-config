@@ -556,3 +556,18 @@ The `run.wsgi` is modified to include Apache2 logging and to use the virtual env
     ```
 
     This is important step in case the website is not working. Reviewing the last few lines of `error.log` to understand. This will commonly require to modify import parths in python files or check database (which can be done using `psql`) or modifying paths in Apache 2 configuration files for the webite or DBURI string for SQLAlchemy.
+
+* Exit the user `grader` and then `ubuntu`
+
+    ```bash
+    λ exit
+    λ exit
+    ```
+
+### Step 7 - Udacity Grader access
+
+* Udacity's Grader to access the remote server using the command below and the SSH key `grader.pem` provided in the repository
+
+    ```bash
+    λ ssh -i grader.pem -p 2200 grader@35.177.147.191
+    ```
