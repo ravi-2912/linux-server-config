@@ -15,6 +15,20 @@ The application can be accessed by [http://35.177.147.191/](http://35.177.147.19
 
 **Please note the above site is time limited and will be removed soon.**
 
+Login to remote server
+
+* As user `ubuntu`
+
+    ```bash
+    λ ssh -i yourKey.pem -p 2200 ubuntu@35.177.147.191
+    ```
+
+* As user `grader` 
+
+    ```bash
+    λ ssh -i grader.pem -p 2200 grader@35.177.147.191
+    ```
+
 ## Configuration Steps
 
 Detailed steps to configure, secure and host the web application in Ubuntu are described below stepwise.
@@ -26,7 +40,7 @@ Detailed steps to configure, secure and host the web application in Ubuntu are d
 * Click *SSH Keys* in main body and create a new SSH key
 * *Download* and save it on the PC
 * Click *Home* in top nav bar and click *Create Instance*
-* Select *OS Only > Ubuntu 18.04 LTS* 
+* Select *OS Only > Ubuntu 18.04 LTS*
 * In *SSH key pair manager* select the newly create key
 * In *Identify your instance* give name to the server instance
 * Finally click *Create Instance* at the end of main body and wait for it to start
@@ -47,25 +61,25 @@ On you Windows terminal (I use [`λcmder`](https://cmder.net/))
 * Navigate to the folder containing your SSH key
 * Check the owners of the SSH key
 
-  ```bash
+  ```cmd
   λ cmd /c icacls yourKey.pem
   ```
 
 * Remove inheritance from the SSH key
 
-  ```bash
+  ```cmd
   λ cmd /c icacls yourKey.pem /c /t /inheritance:d
   ```
 
 * Remove all owners of the SSH key except the logged in user in Window
 
-  ```bash
+  ```cmd
   λ cmd /c icacls ravi.pem  /c /t /remove Administrator BUILTIN\Administrators BUILTIN Everyone System Users
   ```
 
 * Login to Amazon AWS Lightsail Remote Server using SSH port 22 (default for Amazon AWS Lightsail)
 
-  ```bash
+  ```cmd
   λ ssh -i yourKey.pem -p 22 ubuntu@35.177.147.19
   ```
 
@@ -76,7 +90,10 @@ On you Windows terminal (I use [`λcmder`](https://cmder.net/))
 After remote logging to system from Step 2 above the `λcmder` terminal will change as follows
 
 ```bash
+ubuntu@ip-172-26-9-187:~$
 ```
+
+The above will be referred as `u$>` in `bash ` code blocks presented below. If logged in as user `grader` the terminal will be referred as `g$>` in `bash` code blocks presented below.
 
 #### Step 3.1 - Updates to Ubuntu
 
@@ -85,9 +102,9 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Update and upgrade
 
   ```bash
-  λ sudo apt-get update
-  λ sudo apt-get upgrade
-  λ sudo apt-get dist-upgrade
+  u$> sudo apt-get update
+  u$> sudo apt-get upgrade
+  u$> sudo apt-get dist-upgrade
   ```
 
   Optional flag `-y` could be added at the end of each line to respond Yes to questions asked.
@@ -95,19 +112,19 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Shutdown and restart
 
   ```bash
-  λ sudo shutdown -r now
+  u$> sudo shutdown -r now
   ```
 
 * Configure local time to UTC and select your city
 
   ```bash
-  λ sudo dpkg-reconfigure tzdata
+  u$> sudo dpkg-reconfigure tzdata
   ```
 
 * Install ntp daemon ntpd for a better synchronization of the server's time over the network connection
 
   ```bash
-  λ sudo apt-get install ntp -y
+  u$> sudo apt-get install ntp -y
   ```
 
 * Enable automatic updates ([ref](https://libre-software.net/ubuntu-automatic-updates/))
@@ -115,14 +132,14 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
   * Install unattended upgrades
 
     ```bash
-    λ sudo apt install unattended-upgrades -y
-    ```  
+    u$> sudo apt install unattended-upgrades -y
+    ```
 
   * Edit `50unattended-upgrades` configuration file
 
     ```bash
-    λ sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
-    ```  
+    u$> sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+    ```
 
     and remove the two slashes (//) in the beginning of the line
 
@@ -133,8 +150,8 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
   * Edit `20auto-upgrades` configuration file
 
     ```bash
-    λ sudo nano /etc/apt/apt.conf.d/20auto-upgrades
-    ```  
+    u$> sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+    ```
 
     and updates as follows
 
@@ -148,25 +165,25 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 *  Alternative to above step (with less control) is to execute the line below
 
     ```bash
-    λ sudo dpkg-reconfigure --priority=low unattended-upgrades
+    u$> sudo dpkg-reconfigure --priority=low unattended-upgrades
     ```
 
 * Check if upgrades work
 
     ```bash
-    λ sudo unattended-upgrades --dry-run --debug
+    u$> sudo unattended-upgrades --dry-run --debug
     ```
 
     Another way is
 
     ```bash
-    λ cat /var/log/unattended-upgrades/unattended-upgrades.log
+    u$> cat /var/log/unattended-upgrades/unattended-upgrades.log
     ```
 
 * Restart the server
 
   ```bash
-  λ sudo shutdown -r now
+  u$> sudo shutdown -r now
   ```
 
 #### Step 3.2 - Firewall and security settings
@@ -179,37 +196,37 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Show added
 
   ```bash
-  λ sudo ufw status
-  λ sudo ufw default deny incoming
-  λ sudo ufw default allow outgoing
-  λ sudo ufw allow 2200/tcp
-  λ sudo ufw allow 123/udp
-  λ sudo ufw allow http
-  λ sudo ufw allow www
-  λ sudo ufw allow ntp
-  λ sudo ufw allow ssh
-  λ sudo ufw show added
+  u$> sudo ufw status
+  u$> sudo ufw default deny incoming
+  u$> sudo ufw default allow outgoing
+  u$> sudo ufw allow 2200/tcp
+  u$> sudo ufw allow 123/udp
+  u$> sudo ufw allow http
+  u$> sudo ufw allow www
+  u$> sudo ufw allow ntp
+  u$> sudo ufw allow ssh
+  u$> sudo ufw show added
   ```
 
 * Edit SSH configuration file and update SSH port to 2200
 
   ```bash
-  λ sudo ufw deny ssh
-  λ sudo nano /etc/ssh/sshd_config
+  u$> sudo ufw deny ssh
+  u$> sudo nano /etc/ssh/sshd_config
   ```
 
 * Enable, restart and check UFW status
 
   ```bash
-  λ sudo ufw enable
-  λ sudo service ssh restart
-  λ sudo ufw statu
+  u$> sudo ufw enable
+  u$> sudo service ssh restart
+  u$> sudo ufw statu
   ```
 
 * Logout from the remote server and login using port 2200
 
     ```bash
-    λ ssh -i yourKey.pem -p 2200 ubuntu@35.177.147.19
+    u$> ssh -i yourKey.pem -p 2200 ubuntu@35.177.147.19
     ```
 
 [`sendmail`](https://packages.ubuntu.com/bionic/sendmail) and [`fail2ban`](http://www.fail2ban.org/wiki/index.php/Main_Page) setup ([ref](https://www.digitalocean.com/community/tutorials/how-fail2ban-works-to-protect-services-on-a-linux-server
@@ -218,8 +235,8 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Install dependencies and create a copy of `jain.conf` as `jail.local`
 
     ```bash
-    λ sudo apt-get install fail2ban sendmail iptables-persistent -y
-    λ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    u$> sudo apt-get install fail2ban sendmail iptables-persistent -y
+    u$> sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
     ```
 
 * Edit `jail.local` file and update as follows
@@ -238,7 +255,7 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Restart `fail2ban`
 
     ```bash
-    λ sudo service fail2ban restart
+    u$> sudo service fail2ban restart
     ```
 
 #### Step 3.3 - User administration
@@ -247,13 +264,13 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
 * Add user `grader` with password `grader` and full name `Udacity Grader`
 
     ```bash
-    λ sudo adduser grader
+    u$> sudo adduser grader
     ```
 
 * Adduser `grader` to **sudoers** list
 
     ```bash
-    λ sudo visudo
+    u$> sudo visudo
     ```
 
     Add the following line under `root ALL=(ALL:ALL) ALL`
@@ -265,46 +282,46 @@ While logged in as `ubuntu@35.177.147.19` execute the commands below
     Allternatively add the above line to a new file `grader` as below
 
     ```bash
-    λ sudo nano /etc/sudoers.d/grader
+    u$> sudo nano /etc/sudoers.d/grader
     ```
 
 * Check for sudo permissions
 
     ```bash
-    λ su - grader
-    λ sudo -l
+    u$> su - grader
+    g$> sudo -l
     ```
 
 * Create `.ssh` folder and create SSH pivate and public keys with name **authorized_keys**
 
     ```bash
-    λ mkdir .ssh
-    λ cd .ssh/
-    λ ssh-keygen
+    g$> mkdir .ssh
+    g$> cd .ssh/
+    g$> ssh-keygen
     ```
 
     Rename the keys
 
     ```bash
-    λ mv authorized_keys authorized_keys.rsa
-    λ mv authorized_keys.pub authorized_keys
+    g$> mv authorized_keys authorized_keys.rsa
+    g$> mv authorized_keys.pub authorized_keys
     ```
 
     Change access permission, exit to user `ubuntu` and change ownership of `.ssh` folder
 
     ```bash
-    λ sudo chmod 700 /home/grader/.ssh/
-    λ sudo chmod 644 /home/grader/.ssh/authorized_keys
-    λ exit
-    λ sudo chown -R grader:grader /home/grader/
-    λ sudo chown -R grader:grader /home/grader/.ssh/
+    g$> sudo chmod 700 /home/grader/.ssh/
+    g$> sudo chmod 644 /home/grader/.ssh/authorized_keys
+    g$> exit
+    u$> sudo chown -R grader:grader /home/grader/
+    u$> sudo chown -R grader:grader /home/grader/.ssh/
     ```
 
 * Send the user `grader` private RSA key via email
 
     ```bash
-    λ su - grader
-    λ echo "Subject: Udacity Grader Key" | cat authorized_keys.rsa | /usr/sbin/sendmail -m "RSA  key for grader" -a authorized_keys.rsa -t yourEmail@hotmailgmail.com
+    u$> su - grader
+    g$> echo "Subject: Udacity Grader Key" | cat authorized_keys.rsa | /usr/sbin/sendmail -m "RSA  key for grader" -a authorized_keys.rsa -t yourEmail@hotmailgmail.com
     ```
 
     From email copy the text message and save it, using a notepad of choice, to `grader.pem` on the Windows host next to `yourKey.pem`.
