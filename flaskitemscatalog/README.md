@@ -1,11 +1,13 @@
 # Sports Item - Flask App
 
-Flask python app to for catalogin sports items. The app features database create, read, and update (CRUD) operations,registered user login, login from third party ([Gmail](https://www.google.com/gmail/
-)) and html templating. The app salient feautures are
+**Original repository link:** [https://github.com/ravi-2912/flask-items-catalog](https://github.com/ravi-2912/flask-items-catalog)
+
+This app is modified to run under [Ubuntu 18](https://www.ubuntu.com/) with [Apache 2 server](https://httpd.apache.org/) served by [Amazon AWS Lightsail](https://aws.amazon.com/).
+
+Flask python app to for catalogin sports items. The app features database create, read, and update (CRUD) operations, registered user login and html templating. The app salient feautures are
 
 * Database CRUD operations
 * User database and login
-* Gmail login
 * HTML Templating
 * JSON endpoint (REST API)
 
@@ -34,3 +36,8 @@ $> pip install httplib2
 * Add [bcrypt](https://github.com/pyca/bcrypt/) passowrd hashing
 * Add user registration and email verification
 * Manage duplicate entries (this is an exsiting bug)
+* Add Google SignIn
+
+### NOTE
+
+* Google+ sign is now depracated and no longer active.
