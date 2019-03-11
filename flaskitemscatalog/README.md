@@ -31,13 +31,32 @@ $> pip install oauth2client
 $> pip install httplib2
 ```
 
-### TODO
+## Modifications to serve usign Apache2
 
-* Add [bcrypt](https://github.com/pyca/bcrypt/) passowrd hashing
-* Add user registration and email verification
-* Manage duplicate entries (this is an exsiting bug)
-* Add Google SignIn
+* Modfication to `run.wsgi`
 
-### NOTE
+```python
+activate_this = '/var/www/flaskitemscatalog/flaskitemscatalog/venv3/bin/activate_this.py'
+with open(activate_this) as file_:
+    exec(file_.read(), dict(__file__=activate_this))
 
-* Google+ sign is now depracated and no longer active.
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/flaskitemscatalog/")
+
+from flaskitemscatalog import app as application
+
+application.secret_key = "super secret key"
+```
+
+* Modififcation to `__init__.py` basically includes all routes from `routes.py` and at the end of file `__init__.py` the following code is included
+
+```python
+if __name__ == "__main__":
+    app.run()
+```
+
+* The `__init__.py` file is also modified to comment the code to import `fill_dp.py` and calls to database function `DB_Main()` and `fillDB()`.
+

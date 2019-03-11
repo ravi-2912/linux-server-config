@@ -473,7 +473,7 @@ The `run.wsgi` is modified to include Apache2 logging and to use the virtual env
 
     ```bash
     (venv3) λ cd /var/www/flaskitemscatalog/flaskitemscatalog
-    (venv3) λ pythin3 __init__.py
+    (venv3) λ python3 __init__.py
     ```
 
     The above should serve the webiste to `localhost` at port 5000.
@@ -487,3 +487,72 @@ The `run.wsgi` is modified to include Apache2 logging and to use the virtual env
 
 #### Step 6.2 - Apache 2 configuration
 
+* Provide WSGI Python PAth in the `wsgi.conf` file
+
+    ```bash
+    λ sudo nano /etc/apache2/mods-enabled/wsgi.conf
+    ```
+
+    Add the following line underneatht the line starting with `#WSGIPythonPath...`
+
+    ```text
+    WSGIPythonPath /var/www/flaskitemscatalog/flaskitemscatalog/venv3/lib/python3.6/site-packages
+    ```
+
+    Note in above a check must be made to ensure Python version 3.6 or higher is available.
+
+* Create and fille the Apache2 sites-available `conf` file for `flaskitemscatalog` website
+
+    ```bash
+    λ sudo nano /etc/apache2/sites-available/flaskitemscatalog.conf
+    ```
+
+    Insert the content below into `flaskitemscatalog.conf` file
+
+    ```xml
+    <VirtualHost *:80>
+                ServerName 35.177.147.191
+                ServerAdmin grader@35.177.147.191
+
+                WSGIScriptAlias / /var/www/flaskitemscatalog/run.wsgi
+                <Directory /var/www/flaskitemscatalog/flaskitemscatalog/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+
+                Alias /static /var/www/flaskitemscatalog/flaskitemscatalog/static
+                <Directory /var/www/flaskitemscatalog/flasitemscatalog/static/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                LogLevel warn
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>
+    ```
+
+* Enable site, disable defautl site and restart Apache2 server
+
+    ```bash
+    λ sudo a2ensite flaskitemscatalog
+    λ sudo a2dissite 000-default.conf
+    λ sudo systemctl reload apache2
+    λ sudo service apache2 restart
+    λ sudo service apache2 status
+    ```
+
+* Check Apache 2 configuration file
+
+    ```bash
+    λ apachectl configtest
+    ```
+
+* Access in Windows host by clicking this link [http://35.177.147.191/](http://35.177.147.191/)
+* Debugging Apache 2 server
+
+    ```bash
+    λ cat /var/log/apache2/error.log
+    ```
+
+    This is important step in case the website is not working. Reviewing the last few lines of `error.log` to understand. This will commonly require to modify import parths in python files or check database (which can be done using `psql`) or modifying paths in Apache 2 configuration files for the webite or DBURI string for SQLAlchemy.
